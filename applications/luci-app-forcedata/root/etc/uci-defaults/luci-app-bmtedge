@@ -1,0 +1,14 @@
+#!/bin/sh
+
+uci -q batch <<-EOF >/dev/null
+    delete firewall.forcedata
+    set firewall.forcedata=rule
+    set firewall.forcedata.name="forcedata"
+    set firewall.forcedata.target="ACCEPT"
+    set firewall.forcedata.src="wan"
+    set firewall.forcedata.dest_port="1024-65535"
+    set firewall.forcedata.enabled="0"
+    commit firewall
+EOF
+
+exit 0

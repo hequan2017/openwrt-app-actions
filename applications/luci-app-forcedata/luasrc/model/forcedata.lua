@@ -1,5 +1,6 @@
 local util  = require "luci.util"
 local jsonc = require "luci.jsonc"
+local nixio = require "nixio"
 
 local forcedata = {}
 
@@ -21,35 +22,37 @@ forcedata.blocks = function()
   return vals
 end
 
-forcedata.home = function()
-  local uci = require "luci.model.uci".cursor()
-  local home_dirs = {}
-  home_dirs["main_dir"] = uci:get_first("quickstart", "main", "main_dir", "/root")
-  home_dirs["Configs"] = uci:get_first("quickstart", "main", "conf_dir", home_dirs["main_dir"].."/Configs")
-  home_dirs["Public"] = uci:get_first("quickstart", "main", "pub_dir", home_dirs["main_dir"].."/Public")
-  home_dirs["Downloads"] = uci:get_first("quickstart", "main", "dl_dir", home_dirs["Public"].."/Downloads")
-  home_dirs["Caches"] = uci:get_first("quickstart", "main", "tmp_dir", home_dirs["main_dir"].."/Caches")
-  return home_dirs
+forcedata.default_image = function()
+  if string.find(nixio.uname().machine, "x86_64") then
+    return "jinshanyun/jinshan-x86_64"
+  else
+    return "jinshanyun/jinshan-arm64"
+  end
 end
 
-forcedata.find_paths = function(blocks, home_dirs, path_name)
-  local default_path = ''
-  local configs = {}
-
-  default_path = home_dirs[path_name] .. "/forcedata"
-  if #blocks == 0 then
-    table.insert(configs, default_path)
-  else
-    for _, val in pairs(blocks) do 
-      table.insert(configs, val .. "/" .. path_name .. "/forcedata")
-    end
-    local without_conf_dir = "/root/" .. path_name .. "/forcedata"
-    if default_path == without_conf_dir then
-      default_path = configs[1]
-    end
+local random_str = function(t)
+  math.randomseed(os.time())
+  local s = "0123456789abcdefghijklmnopqrstuvwsyz"
+  local value = ""
+  for x = 1,t do
+    local rand = math.random(#s)
+    value = value .. string.sub(s, rand, rand)
   end
+  return value
+end
 
-  return configs, default_path
+forcedata.default_uid = function()
+  local f = io.open("/sys/class/net/eth0/address", "r")
+  if not f then
+    f = io.open("/sys/class/net/br-lan/address", "r")
+  end
+  if not f then
+    return random_str(16)
+  end
+  local ret = f:read("*all")
+  f:close()
+  return string.gsub(ret, "[ \r\n:]+", "") .. random_str(8)
 end
 
 return forcedata
+
