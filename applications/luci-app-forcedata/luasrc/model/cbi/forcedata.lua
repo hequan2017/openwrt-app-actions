@@ -6,8 +6,7 @@ local taskd = require "luci.model.tasks"
 local forcedata_model = require "luci.model.forcedata"
 local m, s, o
 
-m = taskd.docker_map("forcedata", "forcedata", "/usr/libexec/istorec/forcedata.sh",
-	translate("forcedata"))
+m = taskd.docker_map("forcedata", "forcedata", "/usr/libexec/istorec/forcedata.sh", translate("forcedata"))
 	--translate("forcedata is the volunteer-built media solution that puts you in control of your media. Stream to any device from your own server, with no strings attached. Your media, your server, your way.")
 	--	.. translate("Official website:") .. ' <a href=\"https://forcedata.org/\" target=\"_blank\">https://forcedata.org/</a>'
 	--	.. "<dl><dt>" .. translate("The following models support hardware transcoding without configuration in forcedata:") .. "</dt>"
@@ -18,8 +17,8 @@ m = taskd.docker_map("forcedata", "forcedata", "/usr/libexec/istorec/forcedata.s
 	--	.. "<dd>- " .. translate("Raspberry Pi series") .. "</dd>"
 	--	.. "</dl>")
 
---s = m:section(SimpleSection, translate("Service Status"), translate("forcedata status:"))
---s:append(Template("forcedata/status"))
+s = m:section(SimpleSection, translate("Service Status"), translate("forcedata status:"))
+s:append(Template("forcedata/status"))
 
 --s = m:section(TypedSection, "forcedata", translate("Setup"),
 --		translate("The initial installation of forcedata requires at least 2GB of space, please make sure that the Docker data directory has enough space. It is recommended to migrate Docker to a hard drive before installing forcedata.")
