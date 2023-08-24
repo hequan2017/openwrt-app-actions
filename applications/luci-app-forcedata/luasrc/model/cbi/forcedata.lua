@@ -18,8 +18,8 @@ m = taskd.docker_map("forcedata", "forcedata", "/usr/libexec/istorec/forcedata.s
 	--	.. "<dd>- " .. translate("Raspberry Pi series") .. "</dd>"
 	--	.. "</dl>")
 
-s = m:section(SimpleSection, translate("Service Status"), translate("forcedata status:"))
-s:append(Template("forcedata/status"))
+--s = m:section(SimpleSection, translate("Service Status"), translate("forcedata status:"))
+--s:append(Template("forcedata/status"))
 
 --s = m:section(TypedSection, "forcedata", translate("Setup"),
 --		translate("The initial installation of forcedata requires at least 2GB of space, please make sure that the Docker data directory has enough space. It is recommended to migrate Docker to a hard drive before installing forcedata.")
