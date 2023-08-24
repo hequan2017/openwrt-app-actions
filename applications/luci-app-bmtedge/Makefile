@@ -9,8 +9,8 @@ LUCI_TITLE:=LuCI support for forcedata
 LUCI_PKGARCH:=all
 LUCI_DEPENDS:=+lsblk +docker +luci-lib-taskd
 
-define Package/luci-app-bmtedge/conffiles
-/etc/config/bmtedge
+define Package/luci-app-forcedata/conffiles
+/etc/config/forcedata
 endef
 
 include $(TOPDIR)/feeds/luci/luci.mk
