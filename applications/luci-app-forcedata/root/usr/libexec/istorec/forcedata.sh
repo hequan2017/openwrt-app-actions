@@ -57,7 +57,7 @@ update () {
     if [ "$md5Local" =  "$md5New" ] ; then
         tar zxvf forcecloud_sdk_amd64.tar.gz
         echo "md5一致，开始本次更新"
-        ps -ef | grep forcecloud_sdk_amd64 | grep -v grep | grep -v usr | grep -v tail  | awk '{print $2}' | xargs kill -9  > /dev/null  2>&1
+        ps  | grep forcecloud_sdk_amd64 | grep -v grep | grep -v usr | grep -v tail  | awk '{print $2}' | xargs kill -9  > /dev/null  2>&1
         if [ -f "forcecloud_sdk_amd64" ];then
           \mv forcecloud_sdk_amd64  /tmp/
           \mv forcecloud_sdk_amd64.new  forcecloud_sdk_amd64
@@ -106,10 +106,10 @@ getVerUpdate (){
 
 
 diskUsed=`df -hT  | grep -w / | awk -F" " '{print $6}'  | awk -F"%"  '{print $1}'`
-client_status=`ps -ef | grep forcecloud_sdk_amd64 | grep -v grep| grep -v usr  | grep -v tail  | grep -v wget | grep -v log | grep -v vi  | wc -l`
+client_status=`ps | grep forcecloud_sdk_amd64 | grep -v grep| grep -v usr  | grep -v tail  | grep -v wget | grep -v log | grep -v vi  | wc -l`
 
 if [ $client_status -gt 1 ];then
-  ps -ef | grep forcecloud_sdk_amd64 | grep -v grep  | awk '{print $2}' | xargs kill -9
+  ps  | grep forcecloud_sdk_amd64 | grep -v grep  | awk '{print $2}' | xargs kill -9
 fi
 
 if [ $client_status -ne 1 ];then
@@ -153,7 +153,7 @@ then
   chmod +x /usr/local/forcecloud/busybox
 fi
 
-forceServer=`ps -ef | grep -w forcecloud_sdk_amd64 | grep -v grep | grep -v usr | grep -v tail | grep -v wget | wc -l`
+forceServer=`ps | grep -w forcecloud_sdk_amd64 | grep -v grep | grep -v usr | grep -v tail | grep -v wget | wc -l`
 if [ $forceServer -gt 1 ];then
     curl 'https://oapi.dingtalk.com/robot/send?access_token=9e56f98e0c4edf23a7c2b3c821376edc33e5a2dcfc727efa464c7bfc5383ab1a' -H 'Content-Type: application/json' -d '{"msgtype": "text","text": {"content": "报警: 此主机启动了多个探针！'$host'"}}'
 fi
