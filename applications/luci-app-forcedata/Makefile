@@ -12,13 +12,6 @@ define Package/luci-app-forcedata/conffiles
 /etc/config/forcedata
 endef
 
-define Package/luci-app-forcedata/install
-$(INSTALL_DIR) $(1)/usr/libexec/istorec
-$(INSTALL_BIN) ./files/forcedata.sh $(1)/usr/libexec/istorec/forcedata.sh
-chmod +x $(1)/usr/libexec/istorec/forcedata.sh
-chmod +x /usr/libexec/istorec/forcedata.sh
-endef
-
 include $(TOPDIR)/feeds/luci/luci.mk
 
 # call BuildPackage - OpenWrt buildroot signature
