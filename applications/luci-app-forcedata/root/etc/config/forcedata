@@ -1,2 +1,3 @@
 config forcedata
 #	option uid ''
+#	option channeid ''
