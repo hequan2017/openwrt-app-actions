@@ -41,7 +41,7 @@ local random_str = function(t)
   return value
 end
 
-forcedata.default_uid = function()
+forcedata.default_machineid = function()
   local f = io.open("/sys/class/net/eth0/address", "r")
   if not f then
     f = io.open("/sys/class/net/br-lan/address", "r")
