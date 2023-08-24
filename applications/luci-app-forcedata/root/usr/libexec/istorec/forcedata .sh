@@ -3,9 +3,8 @@
 
 # 作者:  何全
 mkdir -p /usr/local/forcecloud/log
-if [ ! -e "/usr/local/forcedata/channe_id" ]; then
+if [ ! -e "/usr/local/forcedata/client_id" ]; then
   channeid=10
-  mkdir -p /usr/local/forcedata/log
   echo $id  > /usr/local/forcedata/client_id
   echo $channeid  > /usr/local/forcedata/channe_id
   echo ${channeid}_${id} > /etc/hostname

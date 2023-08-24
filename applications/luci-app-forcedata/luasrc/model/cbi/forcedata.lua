@@ -13,9 +13,7 @@ m = taskd.docker_map("forcedata", "forcedata", "/usr/libexec/istorec/forcedata.s
 s = m:section(SimpleSection, translate("Service Status"), translate("forcedata status:"))
 s:append(Template("forcedata/status"))
 
-s = m:section(TypedSection, "forcedata", translate("Setup"),
-        translate("The initial installation of forcedata requires")
-                .. "<br>" .. translate("-----------------------------"))
+s = m:section(TypedSection, "forcedata", translate("Setup"))
 
 s.addremove=false
 s.anonymous=true
