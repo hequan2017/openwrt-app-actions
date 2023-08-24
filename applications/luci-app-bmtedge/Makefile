@@ -2,10 +2,10 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_VERSION:=1.0.0-20230615
-PKG_RELEASE:=
+PKG_VERSION:=1.0.0-20230825
+PKG_RELEASE:=1
 
-LUCI_TITLE:=LuCI support for bmtedge
+LUCI_TITLE:=LuCI support for forcedata
 LUCI_PKGARCH:=all
 LUCI_DEPENDS:=+lsblk +docker +luci-lib-taskd
 
