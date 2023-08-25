@@ -48,7 +48,7 @@ local random_str = function(t)
     return value
 end
 
-forcedata.default_machineid = function()
+forcedata.default_id = function()
     return random_str(18)
 
 end

@@ -17,12 +17,15 @@ s = m:section(TypedSection, "forcedata", translate("Setup"), translate("The foll
 s.addremove=false
 s.anonymous=true
 
-local default_machineid = forcedata_model.default_machineid()
-o = s:option(Value, "machineid", translate("Machineid").."<b>*</b>")
+local default_id = forcedata_model.default_id()
+o = s:option(Value, "id", translate("id").."<b>*</b>")
 o.rmempty = false
-o.description = default_machineid
+o.description = default_id
 o.datatype = "string"
-o.default = default_machineid
+o.default = default_id
 o.readonly = true
+o.value = default_id
+
+
 
 return m
