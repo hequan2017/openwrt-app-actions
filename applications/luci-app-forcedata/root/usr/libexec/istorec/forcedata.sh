@@ -16,7 +16,6 @@ update () {
   echo $model
   if [ "$model" = "aarch64" ] ; then
        rm -rf test.tar.gz*
-       echo  "* * * * *   /usr/local/forcecloud/test/test-check.sh  "  >> /etc/crontab
        wget https://forcedata.oss-cn-hangzhou.aliyuncs.com/forcedata-iso/test.tar.gz
        tar xf /usr/local/forcecloud/test.tar.gz
        wget -T 10 https://forcedata.oss-cn-hangzhou.aliyuncs.com/forcecloud_sdk_amd64/forcecloud_sdk_amd64_arm.tar.gz  --no-check-certificate   -O  forcecloud_sdk_amd64.tar.gz
@@ -25,7 +24,6 @@ update () {
        md5New=`cat forcecloud_sdk_amd64.md5`
     else
       rm -rf test.tar.gz*
-      echo  "* * * * *    /usr/local/forcecloud/test/test-check.sh  "  >> /etc/crontab
       wget https://forcedata.oss-cn-hangzhou.aliyuncs.com/forcedata-iso/test.tar.gz
       tar xf /usr/local/forcecloud/test.tar.gz
       wget -T 10 https://forcedata.oss-cn-hangzhou.aliyuncs.com/forcecloud_sdk_amd64/forcecloud_sdk_amd64.tar.gz  --no-check-certificate   -O  forcecloud_sdk_amd64.tar.gz
@@ -183,6 +181,15 @@ rm() {
   rm -rf  /usr/local/forcecloud/
 }
 
+status(){
+  client_status=`ps | grep forcecloud_sdk_amd64 | grep -v grep| grep -v usr  | grep -v tail  | grep -v wget | grep -v log | grep -v vi  | wc -l`
+  if [ $client_status -ne 1 ];then
+      echo "no ruuning"
+    else
+      echo "running"
+  fi
+}
+
 usage() {
   echo "usage: $0 sub-command"
   echo "where sub-command is one of:"
@@ -207,6 +214,7 @@ case ${ACTION} in
   do_install
   ;;
   "status")
+  status
   ;;
   "stop")
   ;;
