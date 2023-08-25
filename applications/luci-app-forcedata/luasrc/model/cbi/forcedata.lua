@@ -30,8 +30,9 @@ local default_uid = forcedata_model.default_uid()
 o = s:option(Value, "uid", translate("UID").."<b>*</b>")
 o.rmempty = false
 o.datatype = "string"
-o:value(default_uid, default_uid)
+o.value = default_uid
 o.default = default_uid
+o.readonly = true
 
 
 return m
