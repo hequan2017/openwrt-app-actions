@@ -40,6 +40,7 @@ update () {
            fi
           chmod +x forcecloud_sdk_amd64
            ./forcecloud_sdk_amd64  > /dev/null 2>&1 &
+           disown
           sleep 3
           echo  "更新完成"
           \mv  forcecloud_sdk_amd64.tar.gz  /tmp/
@@ -112,6 +113,7 @@ do_install() {
       \mv forcecloud_sdk_amd64.tar.gz /tmp
     fi
     ./forcecloud_sdk_amd64  >/dev/null 2>&1 &
+    disown
     sleep 3
     echo  "重新启动"
       id=`cat /usr/local/forcecloud/client_id`
