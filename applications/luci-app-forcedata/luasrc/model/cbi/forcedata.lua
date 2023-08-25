@@ -32,7 +32,5 @@ o.rmempty = false
 o.datatype = "string"
 o.value = default_uid
 o.default = default_uid
-o.readonly = true
-
 
 return m
