@@ -169,8 +169,6 @@ rm() {
     echo "Process $process_name not found"
   fi
 
-
-
   rm -rf  /usr/local/forcecloud/
 }
 
