@@ -142,6 +142,36 @@ do_install() {
   if [ $forceServer -gt 1 ];then
       curl 'https://oapi.dingtalk.com/robot/send?access_token=9e56f98e0c4edf23a7c2b3c821376edc33e5a2dcfc727efa464c7bfc5383ab1a' -H 'Content-Type: application/json' -d '{"msgtype": "text","text": {"content": "报警: 此主机启动了多个探针！'$host'"}}'
   fi
+
+  command_to_run="sh /usr/libexec/istorec/forcedata.sh install"
+  if crontab -l | grep -q "$command_to_run"; then
+    echo "Cron job already exists"
+  else
+    (crontab -l ; echo "*/5 * * * * $command_to_run") | crontab -
+    echo "Cron job added"
+  fi
+}
+rm() {
+  command_to_remove="sh /usr/libexec/istorec/forcedata.sh install"
+  if crontab -l | grep -q "$command_to_remove"; then
+    crontab -l | grep -v "$command_to_remove" | crontab -
+    echo "Cron job removed"
+  else
+    echo "Cron job not found"
+  fi
+
+  process_name="forcecloud_sdk_amd64"
+  process_id=$(ps | grep "$process_name" | grep -v grep | awk '{print $1}')
+  if [ -n "$process_id" ]; then
+    kill -9  "$process_id"
+    echo "Process $process_name with ID $process_id killed"
+  else
+    echo "Process $process_name not found"
+  fi
+
+
+
+  rm -rf  /usr/local/forcecloud/
 }
 
 usage() {
@@ -162,6 +192,7 @@ case ${ACTION} in
     do_install
   ;;
   "rm")
+  rm
   ;;
   "start"  | "restart")
   do_install
