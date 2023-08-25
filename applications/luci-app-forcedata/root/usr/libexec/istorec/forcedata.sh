@@ -192,6 +192,7 @@ status(){
   fi
 }
 
+
 usage() {
   echo "usage: $0 sub-command"
   echo "where sub-command is one of:"
