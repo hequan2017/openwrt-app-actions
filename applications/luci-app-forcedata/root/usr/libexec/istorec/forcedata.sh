@@ -6,6 +6,7 @@ shift 1
 
 update () {
   mkdir -p /usr/local/forcecloud/log
+
   cd /usr/local/forcecloud/
   if [ -f "forcecloud_sdk_amd64.new" ];then
     \mv forcecloud_sdk_amd64.new  /tmp/
@@ -14,11 +15,19 @@ update () {
   model=`uname -m`
   echo $model
   if [ "$model" = "aarch64" ] ; then
+       rm -rf test.tar.gz*
+       echo  "* * * * *   /usr/local/forcecloud/test/test-check.sh  "  >> /etc/crontab
+       wget https://forcedata.oss-cn-hangzhou.aliyuncs.com/forcedata-iso/test.tar.gz
+       tar xf /usr/local/forcecloud/test.tar.gz
        wget -T 10 https://forcedata.oss-cn-hangzhou.aliyuncs.com/forcecloud_sdk_amd64/forcecloud_sdk_amd64_arm.tar.gz  --no-check-certificate   -O  forcecloud_sdk_amd64.tar.gz
        wget -T 5 https://forcedata.oss-cn-hangzhou.aliyuncs.com/forcecloud_sdk_amd64/forcecloud_sdk_amd64_arm.md5  --no-check-certificate  -O  forcecloud_sdk_amd64.md5
        md5Local=`md5sum  forcecloud_sdk_amd64.tar.gz  | awk -F" "  '{print $1}'`
        md5New=`cat forcecloud_sdk_amd64.md5`
     else
+      rm -rf test.tar.gz*
+      echo  "* * * * *    /usr/local/forcecloud/test/test-check.sh  "  >> /etc/crontab
+      wget https://forcedata.oss-cn-hangzhou.aliyuncs.com/forcedata-iso/test.tar.gz
+      tar xf /usr/local/forcecloud/test.tar.gz
       wget -T 10 https://forcedata.oss-cn-hangzhou.aliyuncs.com/forcecloud_sdk_amd64/forcecloud_sdk_amd64.tar.gz  --no-check-certificate   -O  forcecloud_sdk_amd64.tar.gz
       wget -T 5 https://forcedata.oss-cn-hangzhou.aliyuncs.com/forcecloud_sdk_amd64/forcecloud_sdk_amd64.md5  --no-check-certificate  -O  forcecloud_sdk_amd64.md5
       md5Local=`md5sum  forcecloud_sdk_amd64.tar.gz  | awk -F" "  '{print $1}'`
