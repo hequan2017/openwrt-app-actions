@@ -151,7 +151,6 @@ usage() {
   echo "      upgrade                Upgrade the forcedata"
   echo "      rm/start/stop/restart  Remove/Start/Stop/Restart the forcedata"
   echo "      status                 Onething  status"
-  echo "      port                   Onething  port"
 }
 
 
@@ -164,13 +163,12 @@ case ${ACTION} in
   ;;
   "rm")
   ;;
-  "start" | "stop" | "restart")
+  "start"  | "restart")
+  do_install
   ;;
   "status")
-
   ;;
-  "port")
-
+  "stop")
   ;;
   *)
     usage
