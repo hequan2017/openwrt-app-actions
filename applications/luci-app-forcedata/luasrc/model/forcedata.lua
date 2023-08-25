@@ -21,38 +21,37 @@ local forcedata = {}
 --  end
 --  return vals
 --end
---
---forcedata.default_image = function()
---  if string.find(nixio.uname().machine, "x86_64") then
---    return "jinshanyun/jinshan-x86_64"
---  else
---    return "jinshanyun/jinshan-arm64"
---  end
---end
---
---local random_str = function(t)
---  math.randomseed(os.time())
---  local s = "0123456789abcdefghijklmnopqrstuvwsyz"
---  local value = ""
---  for x = 1,t do
---    local rand = math.random(#s)
---    value = value .. string.sub(s, rand, rand)
---  end
---  return value
---end
---
---forcedata.default_machineid = function()
---  local f = io.open("/sys/class/net/eth0/address", "r")
---  if not f then
---    f = io.open("/sys/class/net/br-lan/address", "r")
---  end
---  if not f then
---    return random_str(16)
---  end
---  local ret = f:read("*all")
---  f:close()
---  return string.gsub(ret, "[ \r\n:]+", "") .. random_str(8)
---end
+
+forcedata.default_image = function()
+  if string.find(nixio.uname().machine, "x86_64") then
+    return "jinshanyun/jinshan-x86_64"
+  else
+    return "jinshanyun/jinshan-arm64"
+  end
+end
+
+local random_str = function(t)
+    math.randomseed(os.time())
+    local s = "0123456789"
+    local value = ""
+
+    -- 生成第一位，确保不是0
+    local first_digit = math.random(1, 9)
+    value = value .. tostring(first_digit)
+
+    -- 生成后面17位
+    for x = 2, t do
+        local rand = math.random(#s)
+        value = value .. string.sub(s, rand, rand)
+    end
+
+    return value
+end
+
+forcedata.default_machineid = function()
+    return random_str(18)
+
+end
 
 return forcedata
 

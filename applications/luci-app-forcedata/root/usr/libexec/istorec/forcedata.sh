@@ -5,6 +5,8 @@ shift 1
 
 do_install() {
   echo 1 >  /tmp/ok
+  local machineid=`uci get forcedata.@forcedata[0].machineid 2>/dev/null`
+  echo $machineid
   echo "Install OK!"
 }
 
