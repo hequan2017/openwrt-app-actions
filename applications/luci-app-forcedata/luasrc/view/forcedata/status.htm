@@ -1,10 +1,10 @@
 <%
 local util  = require "luci.util"
-local container_status = util.trim(util.exec(" ps | grep forcedata | grep -v grep"))
+local container_status = util.trim(util.exec(" ps | grep forcedata | grep -v grep | grep -v test"))
 local container_install = (string.len(container_status) > 0)
 local container_running = container_status == "running"
 local uci = require "luci.model.uci".cursor()
-local id = uci:get_first("forcedata", "forcedata", "id", "")
+local id = uci:get_first("forcedata", "forcedata", "uid", "")
 -%>
 <div class="cbi-value">
     <label class="cbi-value-title"><%:Status%></label>
@@ -49,7 +49,7 @@ local id = uci:get_first("forcedata", "forcedata", "id", "")
             return;
         }
         shown = true;
-        new QRCode(document.getElementById("qrimage"), "force_10_"+"<%=id%>");
+        new QRCode(document.getElementById("qrimage"), "force_10_"+"<%=uid%>");
         document.getElementById("winContainer").style.removeProperty('display');
     };
 
