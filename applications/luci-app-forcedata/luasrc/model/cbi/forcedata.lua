@@ -17,15 +17,21 @@ s = m:section(TypedSection, "forcedata", translate("Setup"), translate("The foll
 s.addremove=false
 s.anonymous=true
 
-local default_id = forcedata_model.default_id()
-o = s:option(Value, "id", translate("id").."<b>*</b>")
-o.rmempty = false
-o.description = default_id
-o.datatype = "string"
-o.default = default_id
-o.readonly = true
-o.value = default_id
+--local default_id = forcedata_model.default_id()
+--o = s:option(Value, "id", translate("id").."<b>*</b>")
+--o.rmempty = false
+--o.description = default_id
+--o.datatype = "string"
+--o.default = default_id
+--o.readonly = true
+--o.value = default_id
 
+local default_uid = forcedata_model.default_uid()
+o = s:option(Value, "uid", translate("UID").."<b>*</b>")
+o.rmempty = false
+o.datatype = "string"
+o:value(default_uid, default_uid)
+o.default = default_uid
 
 
 return m

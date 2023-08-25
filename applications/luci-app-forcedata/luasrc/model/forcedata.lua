@@ -53,5 +53,10 @@ forcedata.default_id = function()
 
 end
 
+
+forcedata.default_uid = function()
+    return random_str(16)
+end
+
 return forcedata
 
