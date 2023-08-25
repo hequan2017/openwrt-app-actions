@@ -4,9 +4,8 @@ ACTION=${1}
 shift 1
 
 do_install() {
-  echo 1 >  /tmp/ok
-  local id=`uci get forcedata.@forcedata[0].id 2>/dev/null`
-  echo $id
+  local uid=`uci get forcedata.@forcedata[0].uid 2>/dev/null`
+  echo $uid
   echo "Install OK!"
 }
 

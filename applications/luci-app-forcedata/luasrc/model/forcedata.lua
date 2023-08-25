@@ -48,14 +48,9 @@ local random_str = function(t)
     return value
 end
 
-forcedata.default_id = function()
-    return random_str(18)
-
-end
-
 
 forcedata.default_uid = function()
-    return random_str(16)
+    return random_str(18)
 end
 
 return forcedata
