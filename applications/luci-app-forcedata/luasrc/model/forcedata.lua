@@ -22,13 +22,13 @@ local forcedata = {}
 --  return vals
 --end
 
-forcedata.default_image = function()
-  if string.find(nixio.uname().machine, "x86_64") then
-    return "jinshanyun/jinshan-x86_64"
-  else
-    return "jinshanyun/jinshan-arm64"
-  end
-end
+--forcedata.default_image = function()
+--  if string.find(nixio.uname().machine, "x86_64") then
+--    return "jinshanyun/jinshan-x86_64"
+--  else
+--    return "jinshanyun/jinshan-arm64"
+--  end
+--end
 
 local random_str = function(t)
     math.randomseed(os.time())

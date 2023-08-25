@@ -49,7 +49,7 @@ local machineid = uci:get_first("forcedata", "forcedata", "machineid", "")
             return;
         }
         shown = true;
-        new QRCode(document.getElementById("qrimage"), "<%=machineid%>");
+        new QRCode(document.getElementById("qrimage"), "force_10_"+"<%=machineid%>");
         document.getElementById("winContainer").style.removeProperty('display');
     };
 
