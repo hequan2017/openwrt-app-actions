@@ -18,10 +18,11 @@ s.addremove=false
 s.anonymous=true
 
 local default_uid = forcedata_model.default_uid()
-o = s:option(Value, "uid", translate("UID").."<b>*</b>")
+o = s:option(Value, "uid", translate("UID").."<b>*</b>","此处唯一标识符请勿修改，否则会影响部署!")
 o.rmempty = false
 o.datatype = "string"
 o.value = default_uid
 o.default = default_uid
+
 
 return m
