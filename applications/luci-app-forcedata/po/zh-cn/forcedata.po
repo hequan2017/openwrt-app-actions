@@ -13,7 +13,7 @@ msgstr "缓存文件路径"
 msgid "Service Status"
 msgstr "服务状态"
 
-msgid "forcedata status:"
+msgid "Forcedata status:"
 msgstr "原力联盟的状态信息如下："
 
 msgid "Setup"

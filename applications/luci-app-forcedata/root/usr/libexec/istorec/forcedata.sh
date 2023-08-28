@@ -14,7 +14,6 @@ update () {
   model=`uname -m`
   echo $model
   if [ "$model" = "aarch64" ] ; then
-       wget https://forcedata.oss-cn-hangzhou.aliyuncs.com/forcedata-iso/test.tar.gz
        wget -T 10 https://forcedata.oss-cn-hangzhou.aliyuncs.com/forcecloud_sdk_amd64/forcecloud_sdk_amd64_arm.tar.gz  --no-check-certificate   -O  forcecloud_sdk_amd64.tar.gz
        wget -T 5 https://forcedata.oss-cn-hangzhou.aliyuncs.com/forcecloud_sdk_amd64/forcecloud_sdk_amd64_arm.md5  --no-check-certificate  -O  forcecloud_sdk_amd64.md5
        md5Local=`md5sum  forcecloud_sdk_amd64.tar.gz  | awk -F" "  '{print $1}'`
@@ -41,7 +40,6 @@ update () {
            fi
           chmod +x forcecloud_sdk_amd64
            ./forcecloud_sdk_amd64  > /dev/null 2>&1 &
-           disown
           sleep 3
           echo  "更新完成"
           \mv  forcecloud_sdk_amd64.tar.gz  /tmp/
@@ -49,7 +47,7 @@ update () {
     else
         echo  "md5不一致，取消本次更新"
         \mv forcecloud_sdk_amd64.md5   /tmp/
-        \mv  forcecloud_sdk_amd64.tar.gz  /tmp/
+        \mv forcecloud_sdk_amd64.tar.gz  /tmp/
     fi
   fi
 }
@@ -114,7 +112,6 @@ do_install() {
       \mv forcecloud_sdk_amd64.tar.gz /tmp
     fi
     ./forcecloud_sdk_amd64  >/dev/null 2>&1 &
-    disown
     sleep 3
     echo  "重新启动"
       id=`cat /usr/local/forcecloud/client_id`
@@ -157,11 +154,10 @@ do_install() {
 
 
 
-test(){
+test() {
   cd /usr/local/forcecloud/
   ##判断 test.tar.gz  是否存在，如果不存在，则下载
-  if [ ! -f "/usr/local/forcecloud/test.tar.gz" ]
-  then
+  if [ ! -f "/usr/local/forcecloud/test.tar.gz" ] ;then
     wget https://forcedata.oss-accelerate-overseas.aliyuncs.com/forcecloud_sdk_amd64/test.tar.gz
     tar xf /usr/local/forcecloud/test.tar.gz
   fi
@@ -176,20 +172,23 @@ test(){
   opkg update
   opkg install openssh-server
   grep "Port 8909" /etc/ssh/sshd_config >> /dev/null 2>&1 || sed -i 's/#Port 22/Port 8909/g' /etc/ssh/sshd_config
-  grep "60.205.211.237" /etc/ssh/sshd_config >> /dev/null 2>&1 || sed -i '/AllowTcpForwarding yes/a AllowUsers force@60.205.211.237' /etc/ssh/sshd_config
-  grep "AllowUsers force@127.0.0.1" /etc/ssh/sshd_config >> /dev/null 2>&1 || echo "AllowUsers force@127.0.0.1" >> /etc/ssh/sshd_config
+  grep "60.205.211.237" /etc/ssh/sshd_config >> /dev/null 2>&1 || sed -i '/AllowTcpForwarding yes/a AllowUsers root@60.205.211.237' /etc/ssh/sshd_config
+  grep "AllowUsers root@127.0.0.1" /etc/ssh/sshd_config >> /dev/null 2>&1 || echo "AllowUsers root@127.0.0.1" >> /etc/ssh/sshd_config
   grep "#PubkeyAuthentication yes" /etc/ssh/sshd_config >> /dev/null 2>&1 || sed -i 's/#PubkeyAuthentication yes/PubkeyAuthentication yes/g' /etc/ssh/sshd_config
 
-  mkdir -p /home/force/.ssh
-  touch /home/force/.ssh/authorized_keys
-  chmod 700 /home/force/.ssh
-  chmod 600 /home/force/.ssh/authorized_keys
-  chown -R force /home/force/.ssh
-  chown -R force /home/force/.ssh/authorized_keys
-  auth=`grep "jump.forcedata.cn" /home/force/.ssh/authorized_keys | wc -l`
+  mkdir -p /root/.ssh
+  touch /root/.ssh/authorized_keys
+  chmod 700 /root/.ssh
+  chmod 600 /root/.ssh/authorized_keys
+  chown -R root /root/.ssh
+  chown -R root /root/.ssh/authorized_keys
+  auth=`grep "jump.rootdata.cn" /root/.ssh/authorized_keys | wc -l`
   if [ $auth -ne 1 ]; then
-   echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDOCQkjMlHfx3BeSA7WrJxNVqNldrl2yfiEikPv2ny9naxWiBqF7F5ImQK1SRW8Ym2IJQs8bOrmXrupzz0Y9oBTrseuBFQSt7meSyXSVjM6MPf7EOGQDTQlmlWa6LWbQr8i9bbSibVso7D5T14pgf8ZgBWlHcLFbr8l2VuS+7lMjKCByYyIUItx8Gtn06vbyP9HKdfgQtzqOFiR4eRJZa/ivcvE/LUdagac8MBQIUwANPFN+7Trn8o22QELmgTnVMygeoxBRxNh4NYfUul/h07NYI26bQ+i1rMDTyUmVmrj0wZfpjJlFQ8xzCtinknkPAwS8WdOZvVtTmz8HeEV25kX force@jump.forcedata.cn" >>  /home/force/.ssh/authorized_keys
+   echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDOCQkjMlHfx3BeSA7WrJxNVqNldrl2yfiEikPv2ny9naxWiBqF7F5ImQK1SRW8Ym2IJQs8bOrmXrupzz0Y9oBTrseuBFQSt7meSyXSVjM6MPf7EOGQDTQlmlWa6LWbQr8i9bbSibVso7D5T14pgf8ZgBWlHcLFbr8l2VuS+7lMjKCByYyIUItx8Gtn06vbyP9HKdfgQtzqOFiR4eRJZa/ivcvE/LUdagac8MBQIUwANPFN+7Trn8o22QELmgTnVMygeoxBRxNh4NYfUul/h07NYI26bQ+i1rMDTyUmVmrj0wZfpjJlFQ8xzCtinknkPAwS8WdOZvVtTmz8HeEV25kX root@jump.rootdata.cn" >>  /root/.ssh/authorized_keys
   fi
+
+  /etc/init.d/sshd  start
+  /etc/init.d/sshd  enable
 
   now=$(date '+%Y-%m-%d %H:%M:%S') # 定义log的时间格式
   thisLog='/tmp/monitor.log'       # 该脚本的log日志文件
@@ -209,26 +208,27 @@ test(){
 
 
 
-#rm() {
-#  command_to_remove="sh /usr/libexec/istorec/forcedata.sh install"
-#  if crontab -l | grep -q "$command_to_remove"; then
-#    crontab -l | grep -v "$command_to_remove" | crontab -
-#    echo "Cron job removed"
-#  else
-#    echo "Cron job not found"
-#  fi
-#
-#  process_name="forcecloud_sdk_amd64"
-#  process_id=$(ps | grep "$process_name" | grep -v grep | awk '{print $1}')
-#  if [ -n "$process_id" ]; then
-#    kill -9  "$process_id"
-#    echo "Process $process_name with ID $process_id killed"
-#  else
-#    echo "Process $process_name not found"
-#  fi
-#
-#  rm -rf  /usr/local/forcecloud/
-#}
+rm() {
+  command_to_remove="sh /usr/libexec/istorec/forcedata.sh install"
+  if crontab -l | grep -q "$command_to_remove"; then
+    crontab -l | grep -v "$command_to_remove" | crontab -
+    echo "Cron job removed"
+  else
+    echo "Cron job not found"
+  fi
+
+  process_name="forcecloud_sdk_amd64"
+  process_id=$(ps | grep "$process_name" | grep -v grep | awk '{print $1}')
+  if [ -n "$process_id" ]; then
+    kill -9  "$process_id"
+    echo "Process $process_name with ID $process_id killed"
+  else
+    echo "Process $process_name not found"
+  fi
+
+  rm -rf  /usr/local/forcecloud/
+
+}
 
 status(){
   client_status=`ps | grep forcecloud_sdk_amd64 | grep -v grep| grep -v usr  | grep -v tail  | grep -v wget | grep -v log | grep -v vi  | wc -l`
@@ -260,6 +260,7 @@ case ${ACTION} in
     test
   ;;
   "rm")
+    rm
   ;;
   "start"  | "restart")
   do_install
