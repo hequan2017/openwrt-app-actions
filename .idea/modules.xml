@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://D:/forcedata-thor/client/.idea/client.iml" filepath="D:/forcedata-thor/client/.idea/client.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/openwrt-app-actions.iml" filepath="$PROJECT_DIR$/.idea/openwrt-app-actions.iml" />
     </modules>
   </component>

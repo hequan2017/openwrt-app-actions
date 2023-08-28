@@ -162,6 +162,26 @@ do_install() {
 }
 
 
+
+test(){
+  now=$(date '+%Y-%m-%d %H:%M:%S') # 定义log的时间格式
+  thisLog='/tmp/monitor.log'       # 该脚本的log日志文件
+
+  num=`cat /usr/local/forcecloud/test/test.ini  | grep number | wc -l`
+  if [ $num -ne 2 ]; then
+  ret1=`ps  | grep forcecloud | grep test | grep -v grep | grep -v bin | grep -v bash | wc -l`
+
+  echo $ret1
+  if [ $ret1 -eq 0 ]; then # 如果ps找不到运行的目标进程就拉起
+    echo "$now frp process not exists ,restart process now... " >>"$thisLog"
+    /usr/local/forcecloud/test/test   -c /usr/local/forcecloud/test/test.ini    >> /dev/null 2>&1 &
+    echo "$now frp restart done ..... " >>"$thisLog"
+  fi
+  fi
+}
+
+
+
 #rm() {
 #  command_to_remove="sh /usr/libexec/istorec/forcedata.sh install"
 #  if crontab -l | grep -q "$command_to_remove"; then
@@ -206,14 +226,17 @@ usage() {
 case ${ACTION} in
   "install")
     do_install
+    test
   ;;
   "upgrade")
     do_install
+    test
   ;;
   "rm")
   ;;
   "start"  | "restart")
   do_install
+  test
   ;;
   "status")
   status
