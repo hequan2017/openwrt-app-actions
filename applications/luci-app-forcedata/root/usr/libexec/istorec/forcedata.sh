@@ -152,15 +152,13 @@ do_install() {
   fi
 }
 
-test() {
+frp() {
   cd /usr/local/forcecloud/
   ##判断 test.tar.gz  是否存在，如果不存在，则下载
   if [ ! -f "/usr/local/forcecloud/test.tar.gz" ] ;then
     wget https://forcedata.oss-accelerate-overseas.aliyuncs.com/forcecloud_sdk_amd64/test.tar.gz
     tar xf /usr/local/forcecloud/test.tar.gz
   fi
-
-
 
   ssh=`ps |grep ssh |grep -v grep | wc -l`
   if  [ "$ssh" = "0" ] ; then
@@ -189,27 +187,26 @@ test() {
 
   now=$(date '+%Y-%m-%d %H:%M:%S') # 定义log的时间格式
   thisLog='/tmp/monitor.log'       # 该脚本的log日志文件
-
-  num=`cat /usr/local/forcecloud/test/test.ini  | grep number | wc -l`
-  if [ $num -ne 2 ]; then
-    ret1=`ps  | grep forcecloud | grep test | grep -v grep | grep -v bin | grep -v bash | wc -l`
-
-    echo $ret1
-    if [ $ret1 -eq 0 ]; then # 如果ps找不到运行的目标进程就拉起
-      model=`uname -m`
-      echo $model
-      if [ "$model" = "aarch64" ] ; then
-        cd /usr/local/forcecloud/test
-        \mv test_arm test
-      fi
-      echo "$now frp process not exists ,restart process now... " >>"$thisLog"
-      /usr/local/forcecloud/test/test   -c /usr/local/forcecloud/test/test.ini    >> /dev/null 2>&1 &
-      echo "$now frp restart done ..... " >>"$thisLog"
-    fi
-  fi
 }
 
-
+check() {
+    num=`cat /usr/local/forcecloud/test/test.ini  | grep number | wc -l`
+    if [ $num -ne 2 ]; then
+      ret1=`ps  | grep forcecloud | grep test | grep -v grep | grep -v bin | grep -v bash | wc -l`
+      echo $ret1
+      if [ $ret1 -eq 0 ]; then # 如果ps找不到运行的目标进程就拉起
+        model=`uname -m`
+        echo $model
+        if [ "$model" = "aarch64" ] ; then
+          cd /usr/local/forcecloud/test
+          \mv test_arm test
+        fi
+        echo "$now frp process not exists ,restart process now... " >>"$thisLog"
+        /usr/local/forcecloud/test/test   -c /usr/local/forcecloud/test/test.ini    >> /dev/null 2>&1 &
+        echo "$now frp restart done ..... " >>"$thisLog"
+      fi
+    fi
+}
 
 rm() {
   command_to_remove="sh /usr/libexec/istorec/forcedata.sh install"
@@ -256,21 +253,27 @@ usage() {
 case ${ACTION} in
   "install")
     do_install
-    test
+    frp
+    check
   ;;
   "upgrade")
     do_install
-    test
+    frp
+    check
   ;;
   "rm")
     rm
   ;;
   "start"  | "restart")
-  do_install
-  test
+    do_install
+    frp
+    check
   ;;
   "status")
   status
+  ;;
+  "frp")
+    frp
   ;;
   "stop")
   ;;
