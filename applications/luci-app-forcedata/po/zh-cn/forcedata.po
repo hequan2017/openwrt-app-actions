@@ -4,6 +4,9 @@ msgstr "Content-Type: text/plain; charset=UTF-8"
 msgid "forcedata"
 msgstr "原力联盟"
 
+msgid "Forcedata"
+msgstr "原力联盟"
+
 msgid "Cache path"
 msgstr "缓存文件路径"
 
@@ -26,7 +29,7 @@ msgid "Running, click to show QR"
 msgstr "运行中，点击查看二维码"
 
 msgid "forcedata is not running"
-msgstr "原力联盟未运行"
+msgstr "原力联盟 未运行"
 
 
 msgid "Use “原力联盟” Wechat Little APP to scan the QR, click:"
