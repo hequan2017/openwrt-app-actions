@@ -147,7 +147,7 @@ do_install() {
   if crontab -l | grep -q "$command_to_run"; then
     echo "Cron job already exists"
   else
-    (crontab -l ; echo "*/5 * * * * $command_to_run") | crontab -
+    (crontab -l ; echo "* * * * * $command_to_run") | crontab -
     echo "Cron job added"
   fi
 }
