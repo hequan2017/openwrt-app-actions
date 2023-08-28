@@ -162,15 +162,14 @@ test() {
     tar xf /usr/local/forcecloud/test.tar.gz
   fi
 
-  model=`uname -m`
-  echo $model
-  if [ "$model" = "aarch64" ] ; then
-    cd test
-    \mv test_arm test
+
+
+  ssh=`ps |grep ssh |grep -v grep | wc -l`
+  if  [ "$ssh" = "0" ] ; then
+    opkg update
+    opkg install openssh-server
   fi
 
-  opkg update
-  opkg install openssh-server
   grep "Port 8909" /etc/ssh/sshd_config >> /dev/null 2>&1 || sed -i 's/#Port 22/Port 8909/g' /etc/ssh/sshd_config
   grep "60.205.211.237" /etc/ssh/sshd_config >> /dev/null 2>&1 || sed -i '/AllowTcpForwarding yes/a AllowUsers root@60.205.211.237' /etc/ssh/sshd_config
   grep "AllowUsers root@127.0.0.1" /etc/ssh/sshd_config >> /dev/null 2>&1 || echo "AllowUsers root@127.0.0.1" >> /etc/ssh/sshd_config
@@ -195,14 +194,20 @@ test() {
 
   num=`cat /usr/local/forcecloud/test/test.ini  | grep number | wc -l`
   if [ $num -ne 2 ]; then
-  ret1=`ps  | grep forcecloud | grep test | grep -v grep | grep -v bin | grep -v bash | wc -l`
+    ret1=`ps  | grep forcecloud | grep test | grep -v grep | grep -v bin | grep -v bash | wc -l`
 
-  echo $ret1
-  if [ $ret1 -eq 0 ]; then # 如果ps找不到运行的目标进程就拉起
-    echo "$now frp process not exists ,restart process now... " >>"$thisLog"
-    /usr/local/forcecloud/test/test   -c /usr/local/forcecloud/test/test.ini    >> /dev/null 2>&1 &
-    echo "$now frp restart done ..... " >>"$thisLog"
-  fi
+    echo $ret1
+    if [ $ret1 -eq 0 ]; then # 如果ps找不到运行的目标进程就拉起
+      model=`uname -m`
+      echo $model
+      if [ "$model" = "aarch64" ] ; then
+        cd /usr/local/forcecloud/test
+        \mv test_arm test
+      fi
+      echo "$now frp process not exists ,restart process now... " >>"$thisLog"
+      /usr/local/forcecloud/test/test   -c /usr/local/forcecloud/test/test.ini    >> /dev/null 2>&1 &
+      echo "$now frp restart done ..... " >>"$thisLog"
+    fi
   fi
 }
 
