@@ -152,8 +152,6 @@ do_install() {
   fi
 }
 
-
-
 test() {
   cd /usr/local/forcecloud/
   ##判断 test.tar.gz  是否存在，如果不存在，则下载
