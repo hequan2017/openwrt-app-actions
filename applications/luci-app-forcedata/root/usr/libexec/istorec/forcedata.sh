@@ -73,6 +73,8 @@ getVerUpdate (){
 
 
 do_install() {
+  opkg update
+  opkg install zoneinfo-asia
   local uid=`uci get forcedata.@forcedata[0].uid 2>/dev/null`
   mkdir -p /usr/local/forcecloud/log
   echo 10 > /usr/local/forcecloud/channe_id
