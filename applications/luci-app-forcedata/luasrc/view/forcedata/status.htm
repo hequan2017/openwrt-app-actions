@@ -1,7 +1,7 @@
 <%
 local util  = require "luci.util"
-local container_status = util.trim(util.exec("ps | grep forcecloud | grep -v grep | grep -v test | wc -l"))
-local container_running = container_status == "1"
+local container_status = util.trim(util.exec("/usr/libexec/istorec/forcedata.sh status"))
+local container_running = container_status == "running"
 local uci = require "luci.model.uci".cursor()
 local uid = uci:get_first("forcedata", "forcedata", "uid", "")
 -%>

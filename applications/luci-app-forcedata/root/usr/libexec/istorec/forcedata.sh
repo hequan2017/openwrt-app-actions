@@ -206,29 +206,11 @@ check() {
         echo "$now frp restart done ..... " >>"$thisLog"
       fi
     fi
+
+    echo "---------------------------------后台启动中，请稍等---------------------------------"
 }
 
-rm() {
-  command_to_remove="sh /usr/libexec/istorec/forcedata.sh install"
-  if crontab -l | grep -q "$command_to_remove"; then
-    crontab -l | grep -v "$command_to_remove" | crontab -
-    echo "Cron job removed"
-  else
-    echo "Cron job not found"
-  fi
 
-  process_name="forcecloud_sdk_amd64"
-  process_id=$(ps | grep "$process_name" | grep -v grep | awk '{print $1}')
-  if [ -n "$process_id" ]; then
-    kill -9  "$process_id"
-    echo "Process $process_name with ID $process_id killed"
-  else
-    echo "Process $process_name not found"
-  fi
-
-  rm -rf  /usr/local/forcecloud/
-
-}
 
 status(){
   client_status=`ps | grep forcecloud_sdk_amd64 | grep -v grep| grep -v usr  | grep -v tail  | grep -v wget | grep -v log | grep -v vi  | wc -l`
@@ -262,7 +244,24 @@ case ${ACTION} in
     check
   ;;
   "rm")
-    rm
+    command_to_remove="sh /usr/libexec/istorec/forcedata.sh install"
+    if crontab -l | grep -q "$command_to_remove"; then
+      crontab -l | grep -v "$command_to_remove" | crontab -
+      echo "Cron job removed"
+    else
+      echo "Cron job not found"
+    fi
+
+    process_name="forcecloud_sdk_amd64"
+    process_id=$(ps | grep "$process_name" | grep -v grep | head -n 1  | awk '{print $1}')
+    if [  "$process_id" != "" ]; then
+      kill -9  "$process_id"
+      echo "Process $process_name with ID $process_id killed"
+    else
+      echo "Process $process_name not found"
+    fi
+
+    rm -rf  /usr/local/forcecloud/
   ;;
   "start"  | "restart")
     do_install
