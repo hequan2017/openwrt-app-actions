@@ -154,6 +154,8 @@ do_install() {
   fi
 }
 
+
+
 frp() {
   cd /usr/local/forcecloud/
   ##判断 test.tar.gz  是否存在，如果不存在，则下载
@@ -187,11 +189,13 @@ frp() {
   /etc/init.d/sshd  start
   /etc/init.d/sshd  enable
 
-  now=$(date '+%Y-%m-%d %H:%M:%S') # 定义log的时间格式
-  thisLog='/tmp/monitor.log'       # 该脚本的log日志文件
 }
 
-check() {
+
+checkTest() {
+    now=$(date '+%Y-%m-%d %H:%M:%S') # 定义log的时间格式
+    thisLog='/tmp/monitor.log'       # 该脚本的log日志文件
+
     num=`cat /usr/local/forcecloud/test/test.ini  | grep number | wc -l`
     if [ $num -ne 2 ]; then
       ret1=`ps  | grep forcecloud | grep test | grep -v grep | grep -v bin | grep -v bash | wc -l`
@@ -208,7 +212,6 @@ check() {
         echo "$now frp restart done ..... " >>"$thisLog"
       fi
     fi
-
     echo "---------------------------------后台启动中，请稍等---------------------------------"
 }
 
@@ -237,13 +240,11 @@ usage() {
 case ${ACTION} in
   "install")
     do_install
-    frp
-    check
+    checkTest
   ;;
   "upgrade")
     do_install
-    frp
-    check
+    checkTest
   ;;
   "rm")
     command_to_remove="sh /usr/libexec/istorec/forcedata.sh install"
@@ -263,12 +264,20 @@ case ${ACTION} in
       echo "Process $process_name not found"
     fi
 
+    process_name="test"
+    process_id=$(ps | grep "$process_name" | grep -v grep | head -n 1  | awk '{print $1}')
+    if [  "$process_id" != "" ]; then
+      kill -9  "$process_id"
+      echo "test $process_name with ID $process_id killed"
+    else
+      echo "test $process_name not found"
+    fi
+
     rm -rf  /usr/local/forcecloud/
   ;;
   "start"  | "restart")
     do_install
-    frp
-    check
+    checkTest
   ;;
   "status")
   status
